@@ -1,0 +1,14 @@
+# Notion → Gemini → Slack 自動処理スクリプト
+# Python 3.10+ 推奨
+
+# 環境変数管理
+python-dotenv>=1.0.0
+
+# HTTP クライアント
+requests>=2.31.0
+
+# Google Gemini API
+google-generativeai>=0.8.0
+
+# 型ヒント（Python 3.10未満の場合）
+# typing-extensions>=4.0.0
