@@ -114,7 +114,7 @@ def load_config() -> AppConfig:
 
     gemini_config = GeminiConfig(
         api_key=_get_required_env("GEMINI_API_KEY"),
-        model=_get_optional_env("GEMINI_MODEL", "gemini-1.5-pro"),
+        model=_get_optional_env("GEMINI_MODEL", "gemini-2.5-pro"),
         system_instruction=system_instruction,
     )
 
