@@ -1,54 +1,24 @@
-name: Notion to Slack Pipeline                            
-                                                            
-  on:                                                       
-    schedule:                                               
-      # 24時間365日、10分ごとに実行                         
-      - cron: '*/10 * * * *'                                
-                                                            
-    # 手動実行                                              
-    workflow_dispatch:                                      
-      inputs:                                               
-        dry_run:                                            
-          description: 'ドライラン（実際の処理は行わない）' 
-          required: false                                   
-          default: 'false'                                  
-          type: boolean                                     
-                                                            
-  jobs:                                                     
-    process:                                                
-      runs-on: ubuntu-latest                                
-      timeout-minutes: 10                                   
-                                                            
-      steps:                                                
-        - name: Checkout repository                         
-          uses: actions/checkout@v4                         
-                                                            
-        - name: Set up Python                               
-          uses: actions/setup-python@v5                     
-          with:                                             
-            python-version: '3.11'                          
-            cache: 'pip'                                    
-                                                            
-        - name: Install dependencies                        
-          run: pip install -r requirements.txt              
-                                                            
-        - name: Run pipeline                                
-          env:                                              
-            NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}   
-            NOTION_DATABASE_ID: ${{                         
-  secrets.NOTION_DATABASE_ID }}                             
-            NOTION_STATUS_PROPERTY: ${{                     
-  vars.NOTION_STATUS_PROPERTY || '処理済み' }}              
-            NOTION_CONTENT_PROPERTIES: ${{                  
-  vars.NOTION_CONTENT_PROPERTIES || 'タイトル,本文' }}      
-            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}   
-            GEMINI_MODEL: ${{ vars.GEMINI_MODEL ||          
-  'gemini-2.0-flash' }}                                     
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL
-   }}                                                       
-          run: |                                            
-            if [ "${{ inputs.dry_run }}" = "true" ]; then   
-              python main.py --verbose --dry-run            
-            else                                            
-              python main.py --verbose                      
-            fi                        
+name: Notion to Slack Pipeline
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - run: python main.py --verbose
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
