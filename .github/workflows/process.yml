@@ -2,8 +2,8 @@ name: Notion to Slack Pipeline
 
 on:
   schedule:
-    # 24時間365日、10分ごとに実行
-    - cron: '*/10 * * * *'
+    # 24時間365日、1時間ごとに実行
+    - cron: '0 * * * *'
 
   # 手動実行
   workflow_dispatch:
